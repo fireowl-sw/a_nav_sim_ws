@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+   <xacro:include filename="$(find fishbot_description)/urdf/common_inertia.xacro" />
+    <xacro:macro name="imu_xacro" params="xyz size mass color_rgba='0.0 0.0 0.0 0.8' gazebo_material='Gazebo/Black'">
+        <link name="imu_link">
+            <visual>
+                <origin xyz="0 0 00" rpy="0 0 0" />
+                <geometry>
+                    <box size="${size} ${size} ${size}" />
+                </geometry>
+                <material name="imu_color">
+                    <color rgba="${color_rgba}" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 00" rpy="0 0 0" />
+                <geometry>
+                    <box size="${size} ${size} ${size}" />
+                </geometry>
+                <material name="imu_color">
+                    <color rgba="${color_rgba}" />
+                </material>
+            </collision>
+            <xacro:box_inertia m="${mass}" w="${size}" d="${size}" h="${size}"/>
+        </link>
+
+        <joint name="imu_joint" type="fixed">
+            <parent link="base_link" />
+            <child link="imu_link" />
+            <origin xyz="${xyz}" />
+        </joint>
+
+        <gazebo reference="imu_link">
+            <material>${gazebo_material}</material>
+        </gazebo>
+    </xacro:macro>
+</robot>

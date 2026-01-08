@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fishbot">
+
+    <!-- 包含模块 -->
+    <xacro:include filename="$(find fishbot_description)/urdf/base.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/actuator/wheel.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/actuator/caster.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/sensor/camera.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/sensor/imu.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/sensor/laser.urdf.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/plugins/gazebo_sensor_plugin.xacro" />
+    <xacro:include filename="$(find fishbot_description)/urdf/fishbot.ros2_control.xacro" />
+
+
+    <!-- 底盘：圆柱形，直径0.24m，高0.12m，重1kg -->
+    <xacro:base_xacro 
+        length="0.12" 
+        radius="0.1" 
+        mass="1.0"
+        color_rgba="0.1 0.1 1.0 0.5"
+        gazebo_material="Gazebo/Blue" />
+    
+    <!-- 轮子：左右各一个，直径0.064m，宽0.04m，重0.1kg，轮距0.2m -->
+    <xacro:wheel_xacro 
+        wheel_name="left" 
+        xyz="0 0.10 -0.06" 
+        length="0.04" 
+        radius="0.032" 
+        mass="0.1"
+        color_rgba="0.2 0.2 0.2 0.8"
+        gazebo_material="Gazebo/DarkGrey" />
+    <xacro:wheel_xacro 
+        wheel_name="right" 
+        xyz="0 -0.10 -0.06" 
+        length="0.04" 
+        radius="0.032" 
+        mass="0.1"
+        color_rgba="0.2 0.2 0.2 0.8"
+        gazebo_material="Gazebo/DarkGrey" />
+    
+    <!-- 万向轮：前后各一个，球形直径0.032m，重0.01kg -->
+    <xacro:caster_xacro 
+        caster_name="front" 
+        xyz="0.08 0.0 -0.076" 
+        radius="0.016" 
+        mass="0.01"
+        color_rgba="0.3 0.3 0.3 0.8"
+        gazebo_material="Gazebo/Grey" />
+    <xacro:caster_xacro 
+        caster_name="back" 
+        xyz="-0.08 0.0 -0.076" 
+        radius="0.016" 
+        mass="0.01"
+        color_rgba="0.3 0.3 0.3 0.8"
+        gazebo_material="Gazebo/Grey" />
+    
+    <!-- 传感器 -->
+    <!-- IMU：2cm立方体，重0.01kg，安装在底盘中心上方2cm -->
+    <xacro:imu_xacro 
+        xyz="0 0 0.02" 
+        size="0.02" 
+        mass="0.01"
+        color_rgba="1.0 0.0 0.0 1.0"
+        gazebo_material="Gazebo/Red" />
+    
+    <!-- 激光雷达：直径4cm，高2cm，重0.03kg，安装在1m高支撑杆上 -->
+    <xacro:laser_xacro 
+        xyz="0 0 0.10" 
+        laser_radius="0.02" 
+        laser_length="0.02" 
+        laser_mass="0.03" 
+        cylinder_radius="0.01" 
+        cylinder_length="0.10" 
+        cylinder_mass="0.01"
+        laser_color_rgba="0.0 1.0 0.0 1.0"
+        laser_gazebo_material="Gazebo/Green"
+        cylinder_color_rgba="0.5 0.5 0.5 0.8"
+        cylinder_gazebo_material="Gazebo/Grey" />
+    
+    <!-- 相机：2×10×2cm，重0.01kg，安装在机器人前方10cm，高7.5cm -->
+    <xacro:camera_xacro 
+        xyz="0.10 0 0.075" 
+        width="0.02" 
+        height="0.10" 
+        depth="0.02" 
+        mass="0.01"
+        color_rgba="0.0 0.0 1.0 1.0"
+        gazebo_material="Gazebo/Black" />
+
+    <!-- 
+    功能：为fishbot机器人配置gazebo仿真环境中的传感器参数
+    包含传感器：
+    1. 激光雷达：360度扫描，用于SLAM建图和导航避障
+    2. IMU：6轴惯性测量，提供姿态和运动信息
+    3. 深度相机：RGB+深度数据，用于视觉导航和障碍物检测,camera略微不同话题有四个
+    /camera_sensor/depth/camera_info
+    /camera_sensor/depth/image_raw
+    /camera_sensor/image_raw
+    /camera_sensor/points
+    -->
+    <xacro:gazebo_sensor_plugin
+        laser_topic="points_raw" 
+        imu_topic="imu" />
+
+    <xacro:fishbot_ros2_control />
+</robot>
