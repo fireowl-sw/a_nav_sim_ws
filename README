@@ -9,3 +9,20 @@ colcon build && source ./install/setup.bash
  
 启动导航
  ros2 launch pointcloud2_slam nav.launch.py
+
+ # 日常推送流程
+git add .                        # 添加所有修改到暂存区
+git commit -m "更新描述"         # 提交修改并添加说明
+git pushall                      # 推送到两个平台
+# 或使用脚本：./push.sh
+
+# 日常拉取流程
+# 1. 先从远程拉取最新代码
+git pull gitee main
+
+# 2. 进行代码修改...
+
+# 3. 提交并推送到两个平台
+git add .
+git commit -m "更新内容"
+git pushall
