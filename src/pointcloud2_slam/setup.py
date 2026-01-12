@@ -30,6 +30,9 @@ setup(
         'console_scripts': [
             'point_transform_node = pointcloud2_slam.1_point_pub_map:main',
             'obstacle_grid_node = pointcloud2_slam.2_map_pub:main',
+            'astar = pointcloud2_slam.3_astar:main',
+            'start_nav = pointcloud2_slam.4_start_nav:main',
+            'odom_map_tf = pointcloud2_slam.5_odom_map_tf:main'
         ],
     },
 )

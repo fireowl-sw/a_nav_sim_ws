@@ -192,7 +192,7 @@ def astar(start, goal, grid):
 class NavigationControl(Node):
     def __init__(self):
         # 初始化ROS 2节点
-        super.__init__('Navigation')
+        super().__init__('Navigation')
         # 创建订阅器订阅地图数据
         self.map_subscription = self.create_subscription(OccupancyGrid, 'combined_grid', self.map_callback, 10)
         # 创建发布者发布路径消息
@@ -261,31 +261,60 @@ class NavigationControl(Node):
             # 保存原始路径
             self.path = paths
             # 对路径进行贝塞尔曲线平滑处理
-            # 检查路径长度是否满足要求
-                # 保留原始路径和平滑路径
-            # 否则不执行任何操作
+            self.path2 = bezier_smoothing(paths, len(paths))
         
         # 否则到达目标位置
-        return 0
+        else:
+            print("reach goal----nav stop")
     
     # 发布路径消息的方法
     def publish_path(self):
         # 检查路径是否存在且不为空
-            # 创建Path消息对象
-            # 设置消息的参考坐标系
-            # 遍历路径点列表 # 创建
-                # 位姿消息对象
-                # 设置位姿的参考坐标系
-                # 设置位姿的位置坐标
-                # 将位姿添加到路径消息中
-            # 发布原始路径消息
+        if self.path is None or len(self.path)==0:
+            print('no path')
+            return
+        # 创建Path消息对象
+        path_msg = Path()
+        # 设置消息的参考坐标系
+        path_msg.header.frame_id = 'map'
+        # 遍历路径点列表 # 创建
+        for (x, y) in self.path:
+            # 位姿消息对象
+            pose = PoseStamped()
+            # 设置位姿的参考坐标系
+            pose.header.frame_id = 'map'
+            # 设置位姿的位置坐标
+            pose.pose.position.x = float(x)
+            pose.pose.position.y = float(y)
+            # 将位姿添加到路径消息中
+            path_msg.poses.append(pose)            
+        # 发布原始路径消息
+        self.path_publisher.publish(path_msg)
             
-            # 创建第二条路径消息对象
-            # 设置消息的参考坐标系
-            # 遍历平滑后的路径点列表
-                # 创建位姿消息对象
-                # 设置位姿的参考坐标系
-                # 设置位姿的位置坐标
-                # 将位姿添加到路径消息中
-            # 发布平滑后的路径消息
-            return 0
+        # 创建第二条路径消息对象
+        path2_msg = Path()            
+        # 设置消息的参考坐标系
+        path2_msg.header.frame_id = 'map'
+        # 遍历平滑后的路径点列表
+        for (x, y) in self.path2:
+            # 创建位姿消息对象
+            pose2 = PoseStamped()
+            # 设置位姿的参考坐标系
+            pose2.header.frame_id = 'map'
+            # 设置位姿的位置坐标
+            pose2.pose.position.x = float(x)
+            # 将位姿添加到路径消息中
+            pose2.pose.position.y = float(y)
+        # 发布平滑后的路径消息
+        self.path_publisher2.publish(path2_msg)
+
+
+def main(args = None):
+    rclpy.init(args = args)
+    navcontrol = NavigationControl()
+    rclpy.spin(navcontrol)
+    navcontrol.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
