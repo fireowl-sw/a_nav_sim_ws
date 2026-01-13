@@ -26,3 +26,170 @@ git pull gitee main
 git add .
 git commit -m "更新内容"
 git pushall
+
+# 🚀 双平台Git初始化 + 一键推送方案
+
+## 🔐 第一步：SSH配置（GitHub必需）
+
+```bash
+# 生成SSH密钥
+ssh-keygen -t rsa -b 4096 -C "fireowlsw@outlook.com"
+# 一路回车即可
+
+# 启动SSH代理
+eval "$(ssh-agent -s)"
+
+# 添加密钥
+ssh-add ~/.ssh/id_rsa
+
+# 复制公钥(终端会显示公钥内容，选中复制）
+cat ~/.ssh/id_rsa.pub
+```
+
+然后去GitHub：Settings → SSH Keys → 添加复制的公钥
+
+## 📦 第二步：Git初始化
+
+```bash
+
+# 配置用户信息
+git config --global user.name "fireowl"
+git config --global user.email "fireowlsw@outlook.com "
+
+# 查看设置的内容是否正确
+git config --list
+
+# 初始化仓库
+git init
+
+# 如果想设置默认分支为 main
+  # 1. 删除.git文件夹
+  rm -rf .git
+
+  # 2. 设置全局默认分支为main
+  git config --global init.defaultBranch main
+
+  # 3. 重新初始化（现在默认就是main分支）
+  git init
+
+  # 4. 验证分支
+  git branch
+  # 显示 * main
+
+
+# 添加远程仓库
+git remote add gitee https://gitee.com/wubol/a_nav_sim_ws.git
+git remote add github git@github.com:fireowl-sw/a_nav_sim_ws.git
+
+# 修改远程仓库为SSH (不想每次输入密码上传
+git remote set-url gitee git@gitee.com:wubol/a_nav_sim_ws.git
+git remote set-url github git@github.com:fireowl-sw/a_nav_sim_ws.git
+
+
+# 创建.gitignore
+echo -e "build/\ninstall/\nlog/\n__pycache__/\n*.pyc\n.vscode/" > .gitignore
+```
+
+## 🚀 第三步：首次推送
+
+```bash
+git add .
+git commit -m "first commit"
+git push -u gitee main
+git push -u github main
+```
+
+## ⚡ 一键推送方法
+
+### 方法A：设置推送别名
+
+```bash
+git config --global alias.pushall '!git push gitee main && git push github main'
+# 以后使用：git pushall
+```
+
+### 方法B：创建推送脚本
+
+```bash
+echo '#!/bin/bash
+git push gitee main && git push github main' > push.sh
+chmod +x push.sh
+# 以后使用：./push.sh
+```
+
+## 🔄 日常使用
+
+```bash
+# 日常推送
+git add .
+git commit -m "更新描述"
+git pushall
+# 或
+./push.sh
+
+# 日常拉取
+# 1. 先拉取最新代码
+git pull gitee main
+
+# 2. 修改代码...
+
+# 3. 提交并推送到两个平台
+git add .
+git commit -m "更新内容"
+git pushall
+
+```
+
+
+
+
+# 🔄 修改Git默认分支为main
+
+## 方法一：git init时设置（推荐）
+
+```bash
+git config --global init.defaultBranch main
+git init
+```
+
+## 方法二：git init后修改
+
+```bash
+# 如果已经init了，修改分支名
+git branch -m main
+```
+
+## 方法三：本地修改后推送到远程
+
+```bash
+# 本地重命名分支
+git branch -m main
+
+# 推送main分支到远程
+git push -u gitee main
+git push -u github main
+
+# 删除远程的master分支（如果存在）
+git push gitee --delete master
+git push github --delete master
+```
+
+## 验证当前分支
+
+```bash
+git branch
+# 应该显示 * main
+```
+
+## 完整流程（推荐）
+
+```bash
+# 1. 设置全局默认分支
+git config --global init.defaultBranch main
+
+# 2. 初始化仓库
+git init
+
+# 3. 现在默认就是main分支了
+git branch  # 显示 * main
+```
