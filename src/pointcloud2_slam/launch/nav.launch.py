@@ -45,12 +45,19 @@ def generate_launch_description():
         name='odom_map_tf',
         output='screen',
     )
+
+    rviz2_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+    )
     ld.add_action(point_transform_node)
     ld.add_action(obstacle_grid_node)
     ld.add_action(astar)
     ld.add_action(start_nav)
     ld.add_action(odom_map_tf)
-
+    ld.add_action(rviz2_node)
 
 
     return ld
