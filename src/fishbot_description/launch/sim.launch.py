@@ -10,7 +10,7 @@ def generate_launch_description():
     robot_name_in_model = "fishbot"
     urdf_tutorial_path = get_package_share_directory('fishbot_description')
     default_model_path = urdf_tutorial_path + '/urdf/fishbot.urdf.xacro'
-    default_world_path = urdf_tutorial_path + '/world/area.world'
+    default_world_path = urdf_tutorial_path + '/world/3d.world'
     
     # 声明可从命令行传入的URDF文件参数
     # ros2 launch fishbot_description sim.launch.py model:=/path/to/urdf
@@ -79,16 +79,35 @@ def generate_launch_description():
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active','fishbot_diff_drive_controller'], 
         output = 'screen'
     )
+    fake_basel_cmd4 = launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_footprint'])
+    fake_basel_cmd5 = launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['0', '0', '0.1', '0', '0', '0', 'base_footprint', 'base_link'])
+    fake_basel_cmd6 = launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['0', '0', '0.0', '0', '0', '0', 'map', 'odom'])
     
     # 返回所有要执行的动作
     return launch.LaunchDescription([
         action_declare_arg_mode_path,
         robot_state_publisher_node,
+        # fake_basel_cmd4,
+        fake_basel_cmd5,
+        fake_basel_cmd6,
         # gazebo可以自己发布joint的tf
         # joint_state_publisher_node,
         # rviz_node,
         launch_gazebo,
         spawn_entity_node,
+        
         # 机器人生成完成后加载关节状态控制器
         launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(

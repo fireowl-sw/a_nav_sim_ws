@@ -5,10 +5,10 @@ source ./install/setup.bash
 colcon build && source ./install/setup.bash
 
 启动仿真
- ros2 launch fishbot_description sim.launch.py
+ros2 launch fishbot_description sim.launch.py
  
 启动导航
- ros2 launch pointcloud2_slam nav.launch.py
+source ./install/setup.bash && ros2 launch pointcloud2_slam nav.launch.py
 
  # 日常推送流程
 git add .                        # 添加所有修改到暂存区

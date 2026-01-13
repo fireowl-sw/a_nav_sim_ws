@@ -64,13 +64,13 @@
         gazebo_material="Gazebo/Red" />
     
     <!-- 激光雷达：直径4cm，高2cm，重0.03kg，安装在1m高支撑杆上 -->
-    <xacro:laser_xacro 
-        xyz="0 0 0.10" 
-        laser_radius="0.02" 
-        laser_length="0.02" 
-        laser_mass="0.03" 
-        cylinder_radius="0.01" 
-        cylinder_length="0.10" 
+    <xacro:laser_xacro
+        xyz="0 0 0.10"
+        laser_radius="0.02"
+        laser_length="0.02"
+        laser_mass="0.03"
+        cylinder_radius="0.01"
+        cylinder_length="0.10"
         cylinder_mass="0.01"
         laser_color_rgba="0.0 1.0 0.0 1.0"
         laser_gazebo_material="Gazebo/Green"

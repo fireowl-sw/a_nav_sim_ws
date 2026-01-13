@@ -74,7 +74,7 @@ def bezier_smoothing(array, num_points):
         # 计算x方向差分，首位补x[0]
         dx = np.diff(x, prepend=x[0])
         # 计算y方向差分，首位补y[0]
-        dy = np.diff(x, prepend=y[0])
+        dy = np.diff(y, prepend=y[0])
         # 弦长
         chord_length = np.sqrt(dx**2 + dy**2)
         # 累积弦长作为参数t

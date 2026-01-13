@@ -21,11 +21,11 @@
                     </ros>
                     <!-- 输出配置 -->
                     <output_type>sensor_msgs/PointCloud2</output_type>  <!-- ROS消息类型 -->
+                    <min_intensity>100.0</min_intensity>
                     <frame_name>laser_link</frame_name>             <!-- 数据发布的参考坐标系 -->
                 </plugin>
                 <!-- 传感器基础控制参数 -->
                 <always_on>true</always_on>                        <!-- 传感器始终开启，节省计算资源 -->
-                <visualize>true</visualize>                        <!-- 在Gazebo中显示激光射线可视化 -->
                 <update_rate>10</update_rate>                       <!-- 数据发布频率：5Hz，适合SLAM导航 -->
                 <pose>0 0 0 0 0 0</pose>                          <!-- 传感器相对于link的位姿[x,y,z,roll,pitch,yaw]-->
                 <!-- 激光传感器参数配置 -->
@@ -48,7 +48,7 @@
                     <!-- 距离检测配置：定义激光雷达的测距能力 -->
                     <range>
                         <min>0.120000</min>                        <!-- 最小检测距离：12cm，避免近距离噪声 -->
-                        <max>8.0</max>                             <!-- 最大检测距离：8米，适合室内导航 -->
+                        <max>40.5</max>                             <!-- 最大检测距离：8米，适合室内导航 -->
                         <resolution>0.015000</resolution>          <!-- 距离精度：1.5cm，满足SLAM精度要求 -->
                     </range>
                     <!-- 噪声模型：模拟真实激光雷达的测量不确定性 -->
@@ -60,6 +60,8 @@
                 </ray>
             </sensor>
         </gazebo>
+        
+        
 
         <!-- IMU惯性测量单元配置 - 提供角速度和线性加速度数据 -->
         <gazebo reference="imu_link">
