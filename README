@@ -105,6 +105,8 @@ git push -u github main
 
 ```bash
 git config --global alias.pushall '!git push gitee main && git push github main'
+git config --global alias.pushalllearn '!git push gitee learn && git push github learn'
+
 # 以后使用：git pushall
 ```
 
